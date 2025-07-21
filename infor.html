@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Information Form</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #fffde4 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 480px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(76,175,80,0.10);
+            padding: 28px 32px;
+        }
+        label {
+            display: block;
+            margin-top: 14px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 7px;
+            margin-top: 4px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        .error {
+            color: red;
+            font-size: 0.95em;
+        }
+        .hobbies-group {
+            margin-top: 8px;
+        }
+        .hobbies-group label {
+            display: inline-block;
+            font-weight: normal;
+            margin-right: 12px;
+        }
+        .result {
+            margin-top: 32px;
+            background: #f1f8e9;
+            border-radius: 10px;
+            padding: 18px;
+            color: #388e3c;
+            font-size: 1.08em;
+        }
+        .gender-group {
+            margin-top: 8px;
+        }
+        .gender-group label {
+            font-weight: normal;
+            margin-right: 18px;
+        }
+        input[type="submit"] {
+            margin-top: 22px;
+            padding: 10px 0;
+            width: 100%;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background: #388e3c;
+        }
+    </style>
+    <script>
+        function validateAndShow(event) {
+            event.preventDefault();
+            // 获取表单值
+            var name = document.getElementById("name").value.trim();
+            var age = document.getElementById("age").value.trim();
+            var genderElems = document.getElementsByName("gender");
+            var address = document.getElementById("address").value.trim();
+            var city = document.getElementById("city").value;
+            var zip = document.getElementById("zip").value.trim();
+            var hobbiesElems = document.getElementsByName("hobbies");
+            // 错误提示
+            var nameError = document.getElementById("nameError");
+            var ageError = document.getElementById("ageError");
+            var genderError = document.getElementById("genderError");
+            var zipError = document.getElementById("zipError");
+            // 清空错误
+            nameError.textContent = "";
+            ageError.textContent = "";
+            genderError.textContent = "";
+            zipError.textContent = "";
+            // 校验
+            var valid = true;
+            if (name === "") {
+                nameError.textContent = "Name is required.";
+                valid = false;
+            }
+            if (!/^\d+$/.test(age) || Number(age) < 10 || Number(age) > 100) {
+                ageError.textContent = "Age must be a number between 10 and 100.";
+                valid = false;
+            }
+            var gender = "";
+            for (var i = 0; i < genderElems.length; i++) {
+                if (genderElems[i].checked) {
+                    gender = genderElems[i].value;
+                    break;
+                }
+            }
+            if (gender === "") {
+                genderError.textContent = "Please select gender.";
+                valid = false;
+            }
+            if (!/^\d{6}$/.test(zip)) {
+                zipError.textContent = "Zip code must be 6 digits.";
+                valid = false;
+            }
+            // 选中的爱好
+            var hobbies = [];
+            for (var i = 0; i < hobbiesElems.length; i++) {
+                if (hobbiesElems[i].checked) {
+                    hobbies.push(hobbiesElems[i].value);
+                }
+            }
+            // 校验通过，显示结果
+            if (valid) {
+                var resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = "<strong>Submitted Information:</strong><br><br>" +
+                    "<b>Name:</b> " + name + "<br>" +
+                    "<b>Age:</b> " + age + "<br>" +
+                    "<b>Gender:</b> " + gender + "<br>" +
+                    "<b>Address:</b> " + (address ? address : "(none)") + "<br>" +
+                    "<b>City:</b> " + city + "<br>" +
+                    "<b>Zip code:</b> " + zip + "<br>" +
+                    "<b>Hobbies:</b> " + (hobbies.length > 0 ? hobbies.join(", ") : "(none)");
+                resultDiv.style.display = "block";
+            } else {
+                document.getElementById("result").style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form onsubmit="validateAndShow(event)">
+            <label for="name">Name:<span style="color:red">*</span></label>
+            <input type="text" id="name" name="name">
+            <div id="nameError" class="error"></div>
+
+            <label for="age">Age:<span style="color:red">*</span></label>
+            <input type="text" id="age" name="age">
+            <div id="ageError" class="error"></div>
+
+            <label>Gender:<span style="color:red">*</span></label>
+            <div class="gender-group">
+                <label><input type="radio" name="gender" value="Male"> Male</label>
+                <label><input type="radio" name="gender" value="Female"> Female</label>
+                <label><input type="radio" name="gender" value="Other"> Other</label>
+            </div>
+            <div id="genderError" class="error"></div>
+
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" rows="2"></textarea>
+
+            <label for="city">City:</label>
+            <select id="city" name="city">
+                <option value="Beijing">Beijing</option>
+                <option value="Shanghai">Shanghai</option>
+                <option value="Guangzhou">Guangzhou</option>
+                <option value="Shenzhen">Shenzhen</option>
+                <option value="Xi'an">Xi'an</option>
+                <option value="Chengdu">Chengdu</option>
+                <option value="Miami">Miami</option>
+                <option value="New York">New York</option>
+                <option value="Los Angeles">Los Angeles</option>
+                <option value="San Francisco">San Francisco</option>
+                <option value="Chicago">Chicago</option>
+                <option value="Houston">Houston</option>
+                <option value="Dallas">Dallas</option>
+                <option value="Seattle">Seattle</option>
+                <option value="Boston">Boston</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="zip">Zip code:<span style="color:red">*</span></label>
+            <input type="text" id="zip" name="zip">
+            <div id="zipError" class="error"></div>
+
+            <label>Hobbies:</label>
+            <div class="hobbies-group">
+                <label><input type="checkbox" name="hobbies" value="Watching movies"> Watching movies</label>
+                <label><input type="checkbox" name="hobbies" value="Singing"> Singing</label>
+                <label><input type="checkbox" name="hobbies" value="Listening Music"> Listening Music</label>
+                <label><input type="checkbox" name="hobbies" value="Reading"> Reading</label>
+                <label><input type="checkbox" name="hobbies" value="Outdoor Sports"> Outdoor Sports</label>
+                <label><input type="checkbox" name="hobbies" value="Indoor Sports"> Indoor Sports</label>
+            </div>
+
+            <input type="submit" value="Submit">
+        </form>
+        <div id="result" class="result" style="display:none"></div>
